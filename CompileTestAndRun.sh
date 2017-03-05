@@ -9,7 +9,15 @@ set +e
 
 TestsFail="NO"  
 
-java congestion.PacketTest
+echo "Beginning unit tests:"
+
+java -ea congestion.PacketTest
+if ! [ $? -eq 0 ]
+then
+	TestsFail="YES"
+fi
+
+java -ea congestion.TimerTest 
 if ! [ $? -eq 0 ]
 then
 	TestsFail="YES"
