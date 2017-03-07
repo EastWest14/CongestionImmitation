@@ -2,17 +2,17 @@ package congestion;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class TickTimer implements Timer {
+public class CongTimer implements Timer {
 	private final int ticksPerSecond;
 	private int currentTick = -1;
 
 	//Hides the default initializer. SHould never be called.
-	private TickTimer() {
+	private CongTimer() {
 		ticksPerSecond = -1;
 	}
 
 	//ticksPerSecond sets the number of ticks per second.
-	public TickTimer(int ticksPerSecond) {
+	public CongTimer(int ticksPerSecond) {
 		assert (ticksPerSecond > 0) : "Ticks per second is not positive: " + ticksPerSecond + ".";
 		this.ticksPerSecond = ticksPerSecond;
 		this.currentTick = 0;

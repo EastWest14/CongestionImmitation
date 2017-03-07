@@ -17,7 +17,7 @@ then
 	TestsFail="YES"
 fi
 
-java -ea congestion.TickTimerTest 
+java -ea congestion.CongTimerTest 
 if ! [ $? -eq 0 ]
 then
 	TestsFail="YES"

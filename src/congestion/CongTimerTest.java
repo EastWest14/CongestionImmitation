@@ -1,6 +1,6 @@
 package congestion;
 
-public class TickTimerTest {
+public class CongTimerTest {
 	public static void main(String[] args) {
 		boolean testPasses = true;
 
@@ -29,7 +29,7 @@ public class TickTimerTest {
 	}
 
 	private static boolean testTicksPerSeconds() {
-		TickTimer aTimer = new TickTimer(60);
+		Timer aTimer = new CongTimer(60);
 		if (aTimer == null) {
 			System.out.println("	Timer initializer returns null.");
 			return false;
@@ -45,7 +45,7 @@ public class TickTimerTest {
 	}
 
 	private static boolean testTicking() {
-		TickTimer aTimer = new TickTimer(2);
+		CongTimer aTimer = new CongTimer(2);
 
 		int currentTick = aTimer.currentTick();
 		if (currentTick != 0) {
@@ -79,7 +79,7 @@ public class TickTimerTest {
 	}
 
 	private static boolean testRandomTick() {
-		TickTimer aTimer = new TickTimer(10);
+		CongTimer aTimer = new CongTimer(10);
 
 		for (int i = 0; i < 100; i++) {
 			int randomTick = aTimer.randomTickNumber();
