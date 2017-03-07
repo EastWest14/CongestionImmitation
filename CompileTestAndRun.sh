@@ -23,7 +23,13 @@ then
 	TestsFail="YES"
 fi
 
-java -ea congestion.ReceiverTest
+java -ea congestion.CongReceiverTest
+if ! [ $? -eq 0 ]
+then
+	TestsFail="YES"
+fi
+
+java -ea congestion.CongBufferTest
 if ! [ $? -eq 0 ]
 then
 	TestsFail="YES"

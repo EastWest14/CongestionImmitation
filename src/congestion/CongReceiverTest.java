@@ -2,7 +2,7 @@ package congestion;
 
 import java.util.*;
 
-public class ReceiverTest {
+public class CongReceiverTest {
 	public static void main(String[] args) {
 		boolean testPasses = true;
 
@@ -31,8 +31,8 @@ public class ReceiverTest {
 	}
 
 	private static boolean testInitialize() {
-		MockTimer mTimer = new MockTimer();
-		Receiver aReceiver = new Receiver(mTimer);
+		Timer mTimer = new MockTimerR();
+		CongReceiver aReceiver = new CongReceiver(mTimer);
 
 		if (aReceiver == null) {
 			System.out.println("	Receiver initializer returns null.");
@@ -43,8 +43,8 @@ public class ReceiverTest {
 	}
 
 	private static boolean testInitialAllReceivedPackets() {
-		MockTimer mTimer = new MockTimer();
-		Receiver aReceiver = new Receiver(mTimer);
+		Timer mTimer = new MockTimerR();
+		CongReceiver aReceiver = new CongReceiver(mTimer);
 
 		List<Packet> allPackets= aReceiver.allReceivedPackets();
 		int length = allPackets.size();
@@ -58,8 +58,8 @@ public class ReceiverTest {
 	}
 
 	private static boolean testReceive() {
-		MockTimer mTimer = new MockTimer();
-		Receiver aReceiver = new Receiver(mTimer);
+		Timer mTimer = new MockTimerR();
+		CongReceiver aReceiver = new CongReceiver(mTimer);
 
 		Packet packetOne = new Packet();
 		Packet packetTwo = new Packet();
@@ -93,7 +93,7 @@ public class ReceiverTest {
 	}
 }
 
-class MockTimer implements Timer {
+class MockTimerR implements Timer {
 	private int[] currentTicksReturned = {1, 12};
 	private int currentTickCounter = 0;
 
