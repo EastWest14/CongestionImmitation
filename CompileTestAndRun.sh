@@ -35,6 +35,12 @@ then
 	TestsFail="YES"
 fi
 
+java -ea congestion.CongSenderTest
+if ! [ $? -eq 0 ]
+then
+	TestsFail="YES"
+fi
+
 echo '============'
 if [ $TestsFail = "YES" ]
 then 
