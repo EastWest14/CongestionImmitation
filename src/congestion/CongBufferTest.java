@@ -69,7 +69,7 @@ public class CongBufferTest {
 		aBuffer.receive(pTwo);
 
 		int finalQueueSize = aBuffer.numberOfQueuedPackets();
-		if (finalQueueSize != 0) {
+		if (finalQueueSize != 2) {
 			System.out.println("	Expected final buffer queue of 2 elements, got " + finalQueueSize + " elements.");
 			return false;
 		}
@@ -110,7 +110,6 @@ public class CongBufferTest {
 		mReceiver.expectToReceivePacket(false);
 		aBuffer.tick();
 		if (!mReceiver.expectationsFulfilled()) {
-			System.out.println("	Buffer shouldn't have forwarded any packets, but did.");
 			return false;
 		}
 
@@ -135,10 +134,24 @@ public class CongBufferTest {
 			return false;
 		}
 
+		mReceiver.expectToReceivePacket(false);
+		aBuffer.tick();
+		if (!mReceiver.expectationsFulfilled()) {
+			System.out.println("	Buffer shouldn't have forwarded packet two, but did.");
+			return false;
+		}
+
+		mReceiver.expectToReceivePacket(false);
+		aBuffer.tick();
+		if (!mReceiver.expectationsFulfilled()) {
+			System.out.println("	Buffer still shouldn't have forwarded packet two, but did.");
+			return false;
+		}
+
 		mReceiver.expectToReceivePacket(true);
 		aBuffer.tick();
 		if (!mReceiver.expectationsFulfilled()) {
-			System.out.println("	Buffer should have forwarded packet two, but did not forward anything.");
+			System.out.println("	Buffer should have forwarded packet two, but did not forward it.");
 			return false;
 		}
 
@@ -166,21 +179,21 @@ public class CongBufferTest {
 
 		//Checking packet stamps
 		Packet p = packetsReceivedByReceiver.get(0);
-		if (p.tickBuffered() == 0) {
+		if (p.tickBuffered() != 0) {
 			System.out.println("	Packet One should have been buffered at tick 0, got: " + p.tickBuffered() + ".");
 			return false;
 		}
-		if (p.numElementsInBuffer() == 0) {
+		if (p.numElementsInBuffer() != 0) {
 			System.out.println("	Packet One should have been buffered with no packets in front, got: " + p.numElementsInBuffer() + ".");
 			return false;
 		}
 
 		p = packetsReceivedByReceiver.get(1);
-		if (p.tickBuffered() == 1) {
+		if (p.tickBuffered() != 1) {
 			System.out.println("	Packet Two should have been buffered at tick 1, got: " + p.tickBuffered() + ".");
 			return false;
 		}
-		if (p.numElementsInBuffer() == 1) {
+		if (p.numElementsInBuffer() != 1) {
 			System.out.println("	Packet Two should have been buffered with 1 packet in front, got: " + p.numElementsInBuffer() + ".");
 			return false;
 		}
@@ -190,7 +203,6 @@ public class CongBufferTest {
 }
 
 class MockTimerB implements Timer {
-	private int[] currentTicksReturned = {1, 12};
 	private int currentTickCounter = 0;
 
 	MockTimerB() {
@@ -202,7 +214,9 @@ class MockTimerB implements Timer {
 	}
 
 	public int currentTick() {
-		return this.currentTicksReturned[this.currentTickCounter++];
+		int currentTick = this.currentTickCounter;
+		this.currentTickCounter++;
+		return currentTick;
 	}
 
 	public boolean tickForward() {
