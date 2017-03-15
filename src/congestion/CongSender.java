@@ -1,7 +1,32 @@
 package congestion;
 
+import java.util.*;
+
 public class CongSender {
-	public static int a(int b) {
-		return b;
+
+	//Hide default initializer.
+	private CongSender() {
+	}
+
+	public CongSender(Timer sysTimer, Buffer buff, int numberOfPacketsToSend) {
+		//Assign instance variable values.
+		//Initialize schedule map.
+	}
+
+	private void schedulePacketSending() {
+		//Repeat by the number of packets sent:
+			//Get a timeslot.
+			//Check if it is used.
+				//If yes - repeat loop.
+				//If no - mark timeslot in the map.
+	}
+
+	public Map<Integer,Boolean> packetSchedule() {
+		//Return a copy of packet schedule map.
+		return null;
+	}
+
+	public void tick() {
+		//Get the current tick value.
 	}
 }

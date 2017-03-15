@@ -2,7 +2,7 @@ package congestion;
 
 import java.util.*;
 
-public class CongBuffer {
+public class CongBuffer implements Buffer {
 	private Timer sysTimer;
 	private Receiver connectedReceiver;
 
