@@ -28,5 +28,8 @@ public class CongSender {
 
 	public void tick() {
 		//Get the current tick value.
+		//Check if any packets are scheduled for this tick.
+			//If no - do nothing.
+			//If yes - create a packet, timestamp it and forward it to the buffer.
 	}
 }
