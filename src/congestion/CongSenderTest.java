@@ -26,7 +26,8 @@ public class CongSenderTest {
 	}
 
 	private static boolean testScheduling() {
-		MockTimerS mTimer = new MockTimerS();
+		int[] pseudoRandomTickNumbers = {1, 2, 2, 3, 1, 4, 5};
+		MockTimerS mTimer = new MockTimerS(pseudoRandomTickNumbers);
 		MockBufferS mBuffer = new MockBufferS();
 		int numberOfPacketsToSchedule = 4;
 		CongSender sender = new CongSender(mTimer, mBuffer, numberOfPacketsToSchedule);
@@ -61,27 +62,66 @@ public class CongSenderTest {
 	}
 
 	private static boolean testTick() {
-		//Create a mock timer instance.
-		//Create a mock buffer instance.
-		//Create a numer of scheduled packets variable.
-		//Initialize Sender with 3 values.
+		int[] pseudoRandomTickNumbers = {2, 3};
+		MockTimerS mTimer = new MockTimerS(pseudoRandomTickNumbers);
+		MockBufferS mBuffer = new MockBufferS();
+		int numberOfPacketsToSchedule = 2;
+		CongSender sender = new CongSender(mTimer, mBuffer, numberOfPacketsToSchedule);
 
-		//Check the packets are forwarded or not forwarded at the right points.
-		//Check the timestamp of the individual packets.
+		//Check the packets are forwarded or not forwarded at the right ticks.
+		mBuffer.expectToReceivePacket(false);
+		sender.tick();
+		if (!mBuffer.expectationsFulfilled()) {
+			System.out.println("	Sender should forward nothing on tick 1, but did forward.");
+			return false;
+		}
 
-		return false;
+		mBuffer.expectToReceivePacket(true);
+		sender.tick();
+		if (!mBuffer.expectationsFulfilled()) {
+			System.out.println("	Sender should forward on tick 2, but did not forward.");
+			return false;
+		}
+		//Check the sent timestamp of the first sent packet.
+		Packet sentPacket = mBuffer.lastReceivedPacket();
+		if (sentPacket.tickSent() != 2) {
+			System.out.println("	Packet should have been sent on tick 2, was sent on tick: " + sentPacket.tickSent() + ".");
+			return false;
+		}
+
+		mBuffer.expectToReceivePacket(true);
+		sender.tick();
+		if (!mBuffer.expectationsFulfilled()) {
+			System.out.println("	Sender should forward on tick 3, but did not forward.");
+			return false;
+		}
+		sentPacket = mBuffer.lastReceivedPacket();
+		if (sentPacket.tickSent() != 3) {
+			System.out.println("	Packet should have been sent on tick 3, was sent on tick: " + sentPacket.tickSent() + ".");
+			return false;
+		}
+
+		mBuffer.expectToReceivePacket(false);
+		sender.tick();
+		if (!mBuffer.expectationsFulfilled()) {
+			System.out.println("	Sender should forward nothing on tick 4, but did forward.");
+			return false;
+		}
+
+		return true;
 	}
 }
 
 class MockTimerS implements Timer {
 	//Returns a specific timeseries for random numbers.
 	//Correctly increments by one on every currentTick call.
-	private int[] pseudoRandomTickNumbers = {1, 2, 2, 3, 1, 4, 5};
+	private int[] pseudoRandomTickNumbers;
 	private int pseudoRanndomTickCounter = 0;
 
 	private int currentTickCounter;
 
-	MockTimerS() {
+	MockTimerS(int[] pseudoRanndomTickNumbers) {
+		this.pseudoRandomTickNumbers = pseudoRandomTickNumbers;
 		this.currentTickCounter = 0;
 	}
 
@@ -103,8 +143,11 @@ class MockTimerS implements Timer {
 }
 
 class MockBufferS implements Buffer {
-	//Has an expectation for receiving/not receiving a packet.
-	//Can return last packet received.
+	private boolean expectationsFulfilled = false;
+	private boolean expectToReceivePacket;
+	private boolean expectationSet = false;
+
+	private Packet lastReceivedPacket;
 
 	public int packetProcessingTime() {
 		return 0;
@@ -114,7 +157,17 @@ class MockBufferS implements Buffer {
 	}
 
 	public void receive(Packet p) {
+		assert (this.expectationSet != false) : "Expectation for packet receipt was not set.";
 
+		this.lastReceivedPacket = p;
+
+		this.expectationSet = false;
+
+		if (this.expectToReceivePacket) {
+			this.expectationsFulfilled = true;
+		} else {
+			this.expectationsFulfilled = false;
+		}
 	}
 
 	public void tick() {
@@ -123,6 +176,27 @@ class MockBufferS implements Buffer {
 
 	public int numberOfQueuedPackets() {
 		return 0;
+	}
+
+	public void expectToReceivePacket(boolean expectation) {
+		this.expectationSet = true;
+
+		this.expectToReceivePacket = expectation;
+		if (this.expectToReceivePacket) {
+			//Start with false, will be reset if packet received.
+			this.expectationsFulfilled = false;
+		} else {
+			//Start with true, will be reset if packet received.
+			this.expectationsFulfilled = true;
+		}
+	}
+
+	public Packet lastReceivedPacket() {
+		return null;
+	}
+
+	public boolean expectationsFulfilled() {
+		return this.expectationsFulfilled;
 	}
 }
 
