@@ -1,5 +1,7 @@
 package congestion;
 
+import java.util.*;
+
 public class CongSenderTest {
 	public static void main(String args[]) {
 		boolean testPasses = true;
@@ -24,18 +26,38 @@ public class CongSenderTest {
 	}
 
 	private static boolean testScheduling() {
-		//Create a mock timer instance.
-		//Create a mock buffer instance.
-		//Create a numer of scheduled packets variable.
-		//Initialize Sender with 3 values.
+		MockTimerS mTimer = new MockTimerS();
+		MockBufferS mBuffer = new MockBufferS();
+		int numberOfPacketsToSchedule = 4;
+		CongSender sender = new CongSender(mTimer, mBuffer, numberOfPacketsToSchedule);
 
-		//Get back the schedule.
-		//Check that nothing is beyond total tick number.
-		//Check that there are exactly the right number of entries - no duplicates were introduced.
+		Map<Integer,Boolean> schedule = sender.packetSchedule();
+		int numScheduledPackets = schedule.size();
 
-		//Can actually check the values one by one.
+		if (numScheduledPackets != 4) {
+			System.out.println("	Expected 4 scheduled packets, got: " + numScheduledPackets + ".");
+			return false;
+		}
 
-		return false;
+		//Cheching a complete small schedule one by one.
+		if (!schedule.containsKey(1)) {
+			System.out.println("	Not all keys scheduled correctly. Nothing scheduled for tick 1.");
+			return false;
+		}
+		if (!schedule.containsKey(2)) {
+			System.out.println("	Not all keys scheduled correctly. Nothing scheduled for tick 2.");
+			return false;
+		}
+		if (!schedule.containsKey(3)) {
+			System.out.println("	Not all keys scheduled correctly. Nothing scheduled for tick 1.");
+			return false;
+		}
+		if (!schedule.containsKey(4)) {
+			System.out.println("	Not all keys scheduled correctly. Nothing scheduled for tick 1.");
+			return false;
+		}
+
+		return true;
 	}
 
 	private static boolean testTick() {
@@ -54,8 +76,10 @@ public class CongSenderTest {
 class MockTimerS implements Timer {
 	//Returns a specific timeseries for random numbers.
 	//Correctly increments by one on every currentTick call.
+	private int[] pseudoRandomTickNumbers = {1, 2, 2, 3, 1, 4, 5};
+	private int pseudoRanndomTickCounter = 0;
 
-	private int currentTickCounter = 0;
+	private int currentTickCounter;
 
 	MockTimerS() {
 		this.currentTickCounter = 0;
@@ -66,7 +90,7 @@ class MockTimerS implements Timer {
 	}
 
 	public int currentTick() {
-		return 0;
+		return this.currentTickCounter++;
 	}
 
 	public boolean tickForward() {
@@ -74,14 +98,14 @@ class MockTimerS implements Timer {
 	}
 
 	public int randomTickNumber() {
-		return 0;
+		return this.pseudoRandomTickNumbers[this.pseudoRanndomTickCounter];
 	}
 }
 
 class MockBufferS implements Buffer {
 	//Has an expectation for receiving/not receiving a packet.
 	//Can return last packet received.
-	
+
 	public int packetProcessingTime() {
 		return 0;
 	}

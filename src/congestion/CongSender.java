@@ -23,7 +23,7 @@ public class CongSender {
 
 	public Map<Integer,Boolean> packetSchedule() {
 		//Return a copy of packet schedule map.
-		return null;
+		return new HashMap<Integer,Boolean>();
 	}
 
 	public void tick() {
