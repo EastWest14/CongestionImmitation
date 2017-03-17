@@ -28,6 +28,7 @@ public class CongSenderTest {
 	private static boolean testScheduling() {
 		int[] pseudoRandomTickNumbers = {1, 2, 2, 3, 1, 4, 5};
 		MockTimerS mTimer = new MockTimerS(pseudoRandomTickNumbers);
+
 		MockBufferS mBuffer = new MockBufferS();
 		int numberOfPacketsToSchedule = 4;
 		CongSender sender = new CongSender(mTimer, mBuffer, numberOfPacketsToSchedule);
@@ -113,16 +114,14 @@ public class CongSenderTest {
 }
 
 class MockTimerS implements Timer {
-	//Returns a specific timeseries for random numbers.
-	//Correctly increments by one on every currentTick call.
 	private int[] pseudoRandomTickNumbers;
-	private int pseudoRanndomTickCounter = 0;
+	private int pseudoRandomTickCounter = 0;
 
 	private int currentTickCounter;
 
-	MockTimerS(int[] pseudoRanndomTickNumbers) {
+	MockTimerS(int[] pseudoRandomTickNumbers) {
 		this.pseudoRandomTickNumbers = pseudoRandomTickNumbers;
-		this.currentTickCounter = 0;
+		this.currentTickCounter = 1;
 	}
 
 	public int ticksPerSecond() {
@@ -138,7 +137,7 @@ class MockTimerS implements Timer {
 	}
 
 	public int randomTickNumber() {
-		return this.pseudoRandomTickNumbers[this.pseudoRanndomTickCounter];
+		return this.pseudoRandomTickNumbers[this.pseudoRandomTickCounter++];
 	}
 }
 
@@ -192,7 +191,7 @@ class MockBufferS implements Buffer {
 	}
 
 	public Packet lastReceivedPacket() {
-		return null;
+		return this.lastReceivedPacket;
 	}
 
 	public boolean expectationsFulfilled() {
