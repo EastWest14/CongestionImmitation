@@ -5,6 +5,9 @@ export CLASSPATH=/Users/iOS_Coder/CongestionImmitation/src/
 cd src/Congestion
 find . -name '*.class' -delete
 javac $(find . -name '*.java' -not -type d)
+cd ../analyzer
+find . -name '*.class' -delete
+javac $(find . -name '*.java' -not -type d)
 cd ../controller
 find . -name '*.class' -delete
 javac $(find . -name '*.java' -not -type d)
@@ -40,6 +43,12 @@ then
 fi
 
 java -ea congestion.CongSenderTest
+if ! [ $? -eq 0 ]
+then
+	TestsFail="YES"
+fi
+
+java -ea analyzer.AnalyzerTest
 if ! [ $? -eq 0 ]
 then
 	TestsFail="YES"
