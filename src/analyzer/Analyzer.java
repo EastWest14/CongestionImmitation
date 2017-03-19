@@ -34,6 +34,10 @@ public class Analyzer {
 			int travelTime = p.tickReceived() - p.tickSent();
 			assert (travelTime >= 0) : "Getting a negative packet travel time";
 
+			if (travelTime == 9) {
+				System.out.println(p.toString());
+			}
+
 			if (travelTime < minTravelTime) {
 				minTravelTime = travelTime;
 			}

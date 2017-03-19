@@ -6,6 +6,10 @@ public class Packet {
 	private int numElementsInBuffer = -1;
 	private int tickReceived = -1;
 
+	public String toString() {
+		return String.format("Packet sent at: %d, buffered at %d with %d packets in front, received at %d.", this.tickSent, this.tickBuffered, this.numElementsInBuffer, this.tickReceived);
+	}
+
 	public void setTickSent(int tickSent) {
 		this.tickSent = tickSent;
 	}

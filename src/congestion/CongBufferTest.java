@@ -97,7 +97,7 @@ public class CongBufferTest {
 			return false;
 		}
 
-		//Check queue has correct size ater one tick.
+		//Check queue has correct size after one tick.
 		int queueSize = aBuffer.numberOfQueuedPackets();
 		if (queueSize != 1) {
 			System.out.println("	Expected queue size 1, got " + queueSize + " elements.");

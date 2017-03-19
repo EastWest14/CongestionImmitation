@@ -1,12 +1,15 @@
 package controller;
 
 import congestion.*;
+import analyzer.*;
 
 public class Controller {
 	private CongTimer timer;
 	private CongReceiver receiver;
 	private CongBuffer buffer;
 	private CongSender sender;
+
+	private Analyzer analyzer;
 
 	//Hide default initializer
 	private Controller() {
@@ -18,18 +21,22 @@ public class Controller {
 		this.buffer = new CongBuffer(this.timer, packetProcessingTime);
 		this.buffer.setReceiver(this.receiver);
 		this.sender = new CongSender(this.timer, this.buffer, numberOfPacketsToSend);
-		//Initializa analyzer.
+		
+		this.analyzer = new Analyzer();
 	}
 
 	public void run() {
-		System.out.println("The system is running!");
 		do {
-			this.sender.tick();
 			this.buffer.tick();
+			this.sender.tick();
 		} while(this.timer.tickForward());
-		System.out.println("The system finished to run!");
-		System.out.println(this.receiver.allReceivedPackets().size() + " packets made it through.");
-		//Provide result to analyzer.
-		//Trigger analyzer result return.
+
+		this.analyzer.analyzePackets(this.receiver.allReceivedPackets());
+	}
+
+	public Analyzer analyzer() {
+		assert this.analyzer != null : "Analyzer is null";
+
+		return this.analyzer;
 	}
 }
