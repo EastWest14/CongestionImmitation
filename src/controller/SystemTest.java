@@ -1,6 +1,7 @@
 package controller;
 
 import analyzer.*;
+import java.lang.*;
 
 public class SystemTest {
 	public static void main(String args[]) {
@@ -8,6 +9,11 @@ public class SystemTest {
 
 		boolean scenario1 = testScenario1();
 		if (!scenario1) {
+			testPasses = false;
+		}
+
+		boolean scenario2 = testScenario2();
+		if (!scenario2) {
 			testPasses = false;
 		}
 
@@ -59,6 +65,51 @@ public class SystemTest {
 		double averageQueueLength = analyzer.averageBufferQueueLength();
 		if (averageQueueLength < 0.002 || averageQueueLength > 0.02) {
 			System.out.println("	Expected average buffer queue length to be in range 0.0 to 0.1. Got: " + averageQueueLength + ".");
+			return false;
+		}
+
+		return true;
+	}
+
+	//SCENARIO 2: ONLY 1 PACKET SENT.
+	private static boolean testScenario2() {
+		Controller contr = new Controller(1000000, 1, 10);
+		contr.run();
+		Analyzer analyzer = contr.analyzer();
+
+		int numReceived = analyzer.numberOfReceivedPackets();
+		if (numReceived != 1) {
+			System.out.println("	Expected 1 received packet. Got: " + numReceived + ".");
+			return false;
+		}
+
+		int minTravelTime = analyzer.minimumTravelTime();
+		if (minTravelTime != 10) {
+			System.out.println("	Expected minimum travel time for packets to be 10. Got: " + minTravelTime + ".");
+			return false;
+		}
+
+		int maxTravelTime = analyzer.maximumTravelTime();
+		if (maxTravelTime != 10) {
+			System.out.println("	Expected maximim travel time for packets to be 10. Got: " + maxTravelTime + ".");
+			return false;
+		}
+
+		double averageTravelTime = analyzer.averageTravelTime();
+		if (Math.abs(averageTravelTime - 10.0) > 0.00001) {
+			System.out.println("	Expected average travel time for packets to be 10.0. Got: " + averageTravelTime + ".");
+			return false;
+		}
+
+		int maxBufferQueue = analyzer.maximumBufferQueueLength();
+		if (maxBufferQueue != 0) {
+			System.out.println("	Expected maximim buffer queue length to be 0. Got: " + maxBufferQueue + ".");
+			return false;
+		}
+
+		double averageQueueLength = analyzer.averageBufferQueueLength();
+		if (averageQueueLength > 0.00001) {
+			System.out.println("	Expected average buffer queue length to be 0.0. Got: " + averageQueueLength + ".");
 			return false;
 		}
 
