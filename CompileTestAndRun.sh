@@ -67,6 +67,9 @@ then
 	exit 1
 else 
 	echo 'Tests Pass'
-	exit 0
 fi
+
+java -ea controller.Launcher $1 $2 $3
+
 cd ..
+exit 0
