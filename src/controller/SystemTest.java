@@ -50,8 +50,8 @@ public class SystemTest {
 		}
 
 		int maxTravelTime = analyzer.maximumTravelTime();
-		if (maxTravelTime < 10 || maxTravelTime > 20) {
-			System.out.println("	Expected maximim travel time for packets to be in range 10-20. Got: " + maxTravelTime + ".");
+		if (maxTravelTime < 10 || maxTravelTime > 30) {
+			System.out.println("	Expected maximim travel time for packets to be in range 10-30. Got: " + maxTravelTime + ".");
 			return false;
 		}
 
@@ -146,8 +146,8 @@ public class SystemTest {
 		}
 
 		double averageTravelTime = analyzer.averageTravelTime();
-		if (averageTravelTime < 14.35 || averageTravelTime > 14.65) {
-			System.out.println("	Expected average travel time for packets to be in range 14.4 to 14.55. Got: " + averageTravelTime + ".");
+		if (averageTravelTime < 14.35 || averageTravelTime > 14.80) {
+			System.out.println("	Expected average travel time for packets to be in range 14.35 to 14.80. Got: " + averageTravelTime + ".");
 			return false;
 		}
 
