@@ -1,4 +1,5 @@
 # CongestionImmitation
+##### H5
 DESCRIPTION:
 
 A simple model of network congestion on a buffer. Packets arrive at a buffer randomly, at a given average rate. Buffer queues the packets and forwards them one by one.
@@ -11,4 +12,4 @@ Program provides a very simplistic immitation of congestion on an internet route
 
 NOTE:
 
-Time is represented as s series of discrete "ticks".
+Time is represented as a series of discrete "ticks"_**.
